@@ -21,7 +21,7 @@ int main(void)
       {6, 7, 8, 9, 10},
       {6, 7, 8, 9, 10}};
 
-  int64_t matriceResultat[SIZE][SIZE];
+  int64_t matriceResultat[SIZE][SIZE] = {0};
   matrix_mult(matriceResultat, matrice1, matrice2);
   matrix_print(matriceResultat);
 

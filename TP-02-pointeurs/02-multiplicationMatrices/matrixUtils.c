@@ -2,22 +2,15 @@
 #include <stdint.h>
 #include "matrixUtils.h"
 
-void matrix_mult(int64_t *finalMatrix, int64_t *matrixA, int64_t *matrixB)
+#define SIZE 5
+
+void matrix_mult(int64_t finalMatrix[SIZE][SIZE], int64_t matrixA[SIZE][SIZE], int64_t matrixB[SIZE][SIZE])
 {
-  int numberRows = sizeof(matrixB) / sizeof(matrixB[0]);
-  int numberColumns = sizeof(matrixA[0]) / sizeof(matrixA[0][0]);
-
-  if (numberColumns != numberRows)
+  for (int i = 0; i < SIZE; i++)
   {
-    printf("Les matrices ne peuvent pas être multipliées");
-    return;
-  }
-
-  for (int i = 0; i < numberRows; i++)
-  {
-    for (int j = 0; j < numberColumns; j++)
+    for (int j = 0; j < SIZE; j++)
     {
-      for (int k = 0; k < numberColumns; k++)
+      for (int k = 0; k < SIZE; k++)
       {
         finalMatrix[i][j] += matrixA[i][k] * matrixB[k][j];
       }
@@ -25,17 +18,14 @@ void matrix_mult(int64_t *finalMatrix, int64_t *matrixA, int64_t *matrixB)
   }
 }
 
-void matrix_print(int64_t *matrix)
+void matrix_print(int64_t matrix[SIZE][SIZE])
 {
-  int numberColumns = sizeof(matrix[0]) / sizeof(matrix[0][0]);
-  int numberRows = sizeof(matrix) / sizeof(matrix[0]);
-
-  printf("Matrix: %d x %d", numberRows, numberColumns);
-  for (int i = 0; i < numberRows; i++)
+  printf("Matrix: %d x %d\n", SIZE, SIZE);
+  for (int i = 0; i < SIZE; i++)
   {
-    for (int j = 0; j < numberColumns; j++)
+    for (int j = 0; j < SIZE; j++)
     {
-      printf("%d ", matrix[i][j]);
+      printf("%lld ", matrix[i][j]);
     }
     printf("\n");
   }
