@@ -12,7 +12,7 @@ runTests: tests
 	./tests
 
 clean:
-	@rm -f *.o $(PROGRAMS)
+	@rm -f *.o $(PROGRAMS) tests
 
 re: clean all
 
