@@ -58,33 +58,43 @@ typedef struct
 	char *title;
 } Winner;
 
-void printWinners(Winner *winners, int numberOfWinners)
+typedef struct
 {
-	printf("%i\n", numberOfWinners);
-	for (int i = 0; i < numberOfWinners; i++)
+	int size;
+	Winner *winners;
+} Winners;
+
+void printWinners(Winners *winners)
+{
+	printf("%d\n", winners->size);
+
+	for (int i = 0; i < winners->size; i++)
 	{
-		printf("%i\n%s\n%s\n", winners[i].year, winners[i].name, winners[i].title);
+		printf("%d\n", winners->winners[i].year);
+		printf("%s\n", winners->winners[i].name);
+		printf("%s\n", winners->winners[i].title);
 	}
 }
 
-void readWinners(void)
+Winners *readWinners(void)
 {
-	int numberOfWinners = scanLineAsInt();
-	Winner *winners = calloc(numberOfWinners, sizeof(Winner));
+	Winners *winners = malloc(sizeof(Winners));
+	winners->size = scanLineAsInt();
+	winners->winners = malloc(winners->size * sizeof(Winner));
 
-	for (int i = 0; i < numberOfWinners; i++)
+	for (int i = 0; i < winners->size; i++)
 	{
-		winners[i].year = scanLineAsInt();
-		winners[i].name = scanLine();
-		winners[i].title = scanLine();
+		winners->winners[i].year = scanLineAsInt();
+		winners->winners[i].name = scanLine();
+		winners->winners[i].title = scanLine();
 	}
 
-	printWinners(winners, numberOfWinners);
+	return winners;
 }
 
 int main(void)
 {
-	readWinners();
-
+	Winners *winners = readWinners();
+	printWinners(winners);
 	return EXIT_SUCCESS;
 }
