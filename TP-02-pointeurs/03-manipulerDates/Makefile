@@ -11,7 +11,7 @@ all: $(PROGRAMS)
 %: %.o
 	${CC} -o $@ ${LDFLAGS} $^
 
-main: main.o
+main: main.o dateUtils.o
 
 run: main
 	./main

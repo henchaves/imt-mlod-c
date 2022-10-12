@@ -1,55 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef enum
-{
-  JANVIER = 1,
-  FEVRIER,
-  MARS,
-  AVRIL,
-  MAI,
-  JUIN,
-  JUILLET,
-  AOUT,
-  SEPTEMBRE,
-  OCTOBRE,
-  NOVEMBRE,
-  DECEMBRE
-} Mois;
-
-typedef struct
-{
-  int jour;
-  Mois mois;
-  int annee;
-} Date;
-
-void initialiseDate(Date *date)
-{
-  printf("Jour : ");
-  scanf("%d", &date->jour);
-  printf("Mois : ");
-  scanf("%d", &date->mois);
-  printf("Annee : ");
-  scanf("%d", &date->annee);
-}
-
-void afficheDate(Date *date)
-{
-  printf("Date: %d/%d/%d\n", date->jour, date->mois, date->annee);
-}
-
-Date creerDateParCopie(void)
-{
-  Date date;
-  printf("Jour : ");
-  scanf("%d", &date.jour);
-  printf("Mois : ");
-  scanf("%d", &date.mois);
-  printf("Annee : ");
-  scanf("%d", &date.annee);
-  return date;
-}
+#include "dateUtils.h"
 
 int main(void)
 {
@@ -60,6 +11,11 @@ int main(void)
   Date d2;
   d2 = creerDateParCopie();
   afficheDate(&d2);
+
+  Date *d3;
+  d3 = newDate();
+  afficheDate(d3);
+  free(d3);
 
   return 0;
 }
