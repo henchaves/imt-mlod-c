@@ -39,10 +39,27 @@ void afficheDate(Date *date)
   printf("Date: %d/%d/%d\n", date->jour, date->mois, date->annee);
 }
 
+Date creerDateParCopie(void)
+{
+  Date date;
+  printf("Jour : ");
+  scanf("%d", &date.jour);
+  printf("Mois : ");
+  scanf("%d", &date.mois);
+  printf("Annee : ");
+  scanf("%d", &date.annee);
+  return date;
+}
+
 int main(void)
 {
-  Date d;
-  initialiseDate(&d);
-  afficheDate(&d);
+  Date d1;
+  initialiseDate(&d1);
+  afficheDate(&d1);
+
+  Date d2;
+  d2 = creerDateParCopie();
+  afficheDate(&d2);
+
   return 0;
 }
