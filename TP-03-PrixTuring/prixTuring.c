@@ -92,9 +92,17 @@ Winners *readWinners(void)
 	return winners;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	Winners *winners = readWinners();
-	printWinners(winners);
+	if (argc == 1)
+	{
+		printWinners(winners);
+	}
+	else
+	{
+		printf("Not implemented yet\n");
+	}
+
 	return EXIT_SUCCESS;
 }
