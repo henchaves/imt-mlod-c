@@ -98,6 +98,22 @@ Winners *readWinners(char *sourceFilename)
 	return winners;
 }
 
+void sortByYear(Winners *winners)
+{
+	for (int i = 0; i < winners->size; i++)
+	{
+		for (int j = i + 1; j < winners->size; j++)
+		{
+			if (winners->winners[i].year > winners->winners[j].year)
+			{
+				Winner tmp = winners->winners[i];
+				winners->winners[i] = winners->winners[j];
+				winners->winners[j] = tmp;
+			}
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	// printf("Nombre d'arguments : %d\n", argc);
@@ -114,7 +130,8 @@ int main(int argc, char *argv[])
 		{
 			if (strcmp(argv[3], "sort") == 0)
 			{
-				// TODO
+				sortByYear(winners);
+				printWinners(winners, argv[2]);
 			}
 			else if (strcmp(argv[3], "addNewWinner") == 0)
 			{
