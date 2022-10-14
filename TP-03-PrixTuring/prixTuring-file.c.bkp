@@ -17,6 +17,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define MAX_LINE_LENGTH 250
+
 typedef struct
 {
 	int year;
@@ -43,8 +45,13 @@ void printWinners(Winners *winners, char *targetFilename)
 
 	for (int i = 0; i < winners->size; i++)
 	{
+		printf("%d\n", winners->winners[i].year);
 		fprintf(targetFile, "%d\n", winners->winners[i].year);
+
+		printf("%s\n", winners->winners[i].name);
 		fprintf(targetFile, "%s\n", winners->winners[i].name);
+
+		printf("%s\n", winners->winners[i].title);
 		fprintf(targetFile, "%s\n", winners->winners[i].title);
 	}
 
@@ -55,10 +62,7 @@ Winners *readWinners(char *sourceFilename)
 {
 	Winners *winners = malloc(sizeof(Winners));
 	FILE *sourceFile = fopen(sourceFilename, "r");
-
-	unsigned int bufferMaxSize = 250;
-	char buffer[bufferMaxSize];
-	size_t len;
+	char line[MAX_LINE_LENGTH] = {0};
 
 	if (sourceFile == NULL)
 	{
@@ -67,31 +71,28 @@ Winners *readWinners(char *sourceFilename)
 	}
 	else
 	{
-		// Size
-		fgets(buffer, bufferMaxSize, sourceFile);
-		buffer[(len = strcspn(buffer, "\n"))] = 0;
-		winners->size = atoi(buffer);
+		fgets(line, MAX_LINE_LENGTH, sourceFile);
+		winners->size = atoi(line);
 		winners->winners = calloc(winners->size, sizeof(Winner));
 
 		for (int i = 0; i < winners->size; i++)
 		{
-			// Year
-			fgets(buffer, bufferMaxSize, sourceFile);
-			buffer[(len = strcspn(buffer, "\n"))] = 0;
-			winners->winners[i].year = atoi(buffer);
+			fgets(line, MAX_LINE_LENGTH, sourceFile);
+			winners->winners[i].year = atoi(line);
 
-			// Name
-			fgets(buffer, bufferMaxSize, sourceFile);
-			buffer[(len = strcspn(buffer, "\n"))] = 0;
-			winners->winners[i].name = malloc((len + 1) * sizeof(char));
-			strcpy(winners->winners[i].name, buffer);
+			fgets(line, MAX_LINE_LENGTH, sourceFile);
+			if (line[strlen(line) - 1] == '\n')
+				line[strlen(line) - 1] = '\0';
+			winners->winners[i].name = calloc(strlen(line), sizeof(char));
+			strcpy(winners->winners[i].name, line);
 
-			// Title
-			fgets(buffer, bufferMaxSize, sourceFile);
-			buffer[(len = strcspn(buffer, "\n"))] = 0;
-			winners->winners[i].title = malloc((len + 1) * sizeof(char));
-			strcpy(winners->winners[i].title, buffer);
+			fgets(line, MAX_LINE_LENGTH, sourceFile);
+			if (line[strlen(line) - 1] == '\n')
+				line[strlen(line) - 1] = '\0';
+			winners->winners[i].title = calloc(strlen(line), sizeof(char));
+			strcpy(winners->winners[i].title, line);
 		}
+
 		fclose(sourceFile);
 	}
 
@@ -105,33 +106,7 @@ int main(int argc, char *argv[])
 	// printf("Nom du fichier source : %s\n", argv[1]);
 	// printf("Nom du fichier cible : %s\n", argv[2]);
 
-	if (argc >= 3)
-	{
-		Winners *winners = readWinners(argv[1]);
-		printWinners(winners, argv[2]);
-
-		if (argc == 4)
-		{
-			if (strcmp(argv[3], "sort") == 0)
-			{
-				// TODO
-			}
-			else if (strcmp(argv[3], "addNewWinner") == 0)
-			{
-				// TODO
-			}
-			else
-			{
-				fprintf(stderr, "Commande inconnue : %s", argv[3]);
-				exit(EXIT_FAILURE);
-			}
-		}
-
-		return EXIT_SUCCESS;
-	}
-	else
-	{
-		printf("Usage: %s sourceFilename targetFilename [method]", argv[0]);
-		return EXIT_FAILURE;
-	}
+	Winners *winners = readWinners(argv[1]);
+	printWinners(winners, argv[2]);
+	return EXIT_SUCCESS;
 }
