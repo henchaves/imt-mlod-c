@@ -12,6 +12,11 @@ bool estVide(Liste l)
 Liste creer(Element v)
 {
 	Liste l = malloc(sizeof(Cellule));
+	if (estVide(l))
+	{
+		fprintf(stderr, "Erreur d'allocation mémoire");
+		exit(EXIT_FAILURE);
+	}
 	l->val = v;
 	l->suiv = NULL;
 	return l;
