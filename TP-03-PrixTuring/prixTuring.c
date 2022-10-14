@@ -120,6 +120,17 @@ int main(int argc, char *argv[])
 		infosAnnee(atoi(argv[2]), winners);
 		break;
 	default:
-		printf("Not implemented yet");
+		printf("Usage: %s [annee] < sourceFile.txt > targetFile.txt\n", argv[0]);
+		return EXIT_FAILURE;
 	}
+
+	for (int i = 0; i < winners->size; i++)
+	{
+		free(winners->winners[i].name);
+		free(winners->winners[i].title);
+	}
+	free(winners->winners);
+	free(winners);
+
+	return EXIT_SUCCESS;
 }
