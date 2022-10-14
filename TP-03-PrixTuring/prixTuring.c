@@ -80,7 +80,7 @@ Winners *readWinners(void)
 {
 	Winners *winners = malloc(sizeof(Winners));
 	winners->size = scanLineAsInt();
-	winners->winners = malloc(winners->size * sizeof(Winner));
+	winners->winners = calloc(winners->size, sizeof(Winner));
 
 	for (int i = 0; i < winners->size; i++)
 	{
@@ -92,17 +92,34 @@ Winners *readWinners(void)
 	return winners;
 }
 
+void infosAnnee(int year, Winners *winners)
+{
+	for (int i = 0; i < winners->size; i++)
+	{
+		if (winners->winners[i].year == year)
+		{
+			printf("L'annee %d, le(s) ganant(s) ont été : %s)\n", year, winners->winners[i].name);
+			printf("Nature des travaux : %s\n", winners->winners[i].title);
+			return;
+		}
+	}
+
+	printf("Pas de gagnant pour cette annee\n");
+}
+
 int main(int argc, char *argv[])
 {
 	Winners *winners = readWinners();
-	if (argc == 1)
-	{
-		printWinners(winners);
-	}
-	else
-	{
-		printf("Not implemented yet\n");
-	}
 
-	return EXIT_SUCCESS;
+	switch (argc)
+	{
+	case 1:
+		printWinners(winners);
+		break;
+	case 3:
+		infosAnnee(atoi(argv[2]), winners);
+		break;
+	default:
+		printf("Not implemented yet");
+	}
 }
