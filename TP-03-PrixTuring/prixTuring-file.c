@@ -17,6 +17,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define BUFFER_SIZE 250
+
 typedef struct
 {
 	int year;
@@ -56,8 +58,7 @@ Winners *readWinners(char *sourceFilename)
 	Winners *winners = malloc(sizeof(Winners));
 	FILE *sourceFile = fopen(sourceFilename, "r");
 
-	unsigned int bufferMaxSize = 250;
-	char buffer[bufferMaxSize];
+	char buffer[BUFFER_SIZE];
 	size_t len;
 
 	if (sourceFile == NULL)
@@ -68,26 +69,23 @@ Winners *readWinners(char *sourceFilename)
 	else
 	{
 		// Size
-		fgets(buffer, bufferMaxSize, sourceFile);
+		fgets(buffer, BUFFER_SIZE, sourceFile);
 		buffer[(len = strcspn(buffer, "\n"))] = 0;
 		winners->size = atoi(buffer);
 		winners->winners = calloc(winners->size, sizeof(Winner));
 
 		for (int i = 0; i < winners->size; i++)
 		{
-			// Year
-			fgets(buffer, bufferMaxSize, sourceFile);
+			fgets(buffer, BUFFER_SIZE, sourceFile);
 			buffer[(len = strcspn(buffer, "\n"))] = 0;
 			winners->winners[i].year = atoi(buffer);
 
-			// Name
-			fgets(buffer, bufferMaxSize, sourceFile);
+			fgets(buffer, BUFFER_SIZE, sourceFile);
 			buffer[(len = strcspn(buffer, "\n"))] = 0;
 			winners->winners[i].name = malloc((len + 1) * sizeof(char));
 			strcpy(winners->winners[i].name, buffer);
 
-			// Title
-			fgets(buffer, bufferMaxSize, sourceFile);
+			fgets(buffer, BUFFER_SIZE, sourceFile);
 			buffer[(len = strcspn(buffer, "\n"))] = 0;
 			winners->winners[i].title = malloc((len + 1) * sizeof(char));
 			strcpy(winners->winners[i].title, buffer);
@@ -98,7 +96,7 @@ Winners *readWinners(char *sourceFilename)
 	return winners;
 }
 
-void sortByYear(Winners *winners)
+void sortTuringWinnersByYear(Winners *winners)
 {
 	for (int i = 0; i < winners->size; i++)
 	{
@@ -114,13 +112,35 @@ void sortByYear(Winners *winners)
 	}
 }
 
+void addNewWinner(Winners *winners)
+{
+	char buffer[BUFFER_SIZE];
+	size_t len;
+
+	winners->winners = realloc(winners->winners, (winners->size + 1) * sizeof(Winner));
+
+	printf("Entrer une année: ");
+	fgets(buffer, BUFFER_SIZE, stdin);
+	buffer[(len = strcspn(buffer, "\n"))] = 0;
+	winners->winners[winners->size].year = atoi(buffer);
+
+	printf("Entrer le(s) gagnant(s): ");
+	fgets(buffer, BUFFER_SIZE, stdin);
+	buffer[(len = strcspn(buffer, "\n"))] = 0;
+	winners->winners[winners->size].name = malloc((len + 1) * sizeof(char));
+	strcpy(winners->winners[winners->size].name, buffer);
+
+	printf("Nature des travaux: ");
+	fgets(buffer, BUFFER_SIZE, stdin);
+	buffer[(len = strcspn(buffer, "\n"))] = 0;
+	winners->winners[winners->size].title = malloc((len + 1) * sizeof(char));
+	strcpy(winners->winners[winners->size].title, buffer);
+
+	winners->size++;
+}
+
 int main(int argc, char *argv[])
 {
-	// printf("Nombre d'arguments : %d\n", argc);
-	// printf("Nom du programme : %s\n", argv[0]);
-	// printf("Nom du fichier source : %s\n", argv[1]);
-	// printf("Nom du fichier cible : %s\n", argv[2]);
-
 	if (argc >= 3)
 	{
 		Winners *winners = readWinners(argv[1]);
@@ -130,25 +150,34 @@ int main(int argc, char *argv[])
 		{
 			if (strcmp(argv[3], "sort") == 0)
 			{
-				sortByYear(winners);
+				sortTuringWinnersByYear(winners);
 				printWinners(winners, argv[2]);
 			}
 			else if (strcmp(argv[3], "addNewWinner") == 0)
 			{
-				// TODO
+				addNewWinner(winners);
+				printWinners(winners, argv[2]);
 			}
 			else
 			{
-				fprintf(stderr, "Commande inconnue : %s", argv[3]);
-				exit(EXIT_FAILURE);
+				fprintf(stderr, "Commande inconnue : %s\n", argv[3]);
+				return EXIT_FAILURE;
 			}
 		}
+
+		for (int i = 0; i < winners->size; i++)
+		{
+			free(winners->winners[i].name);
+			free(winners->winners[i].title);
+		}
+		free(winners->winners);
+		free(winners);
 
 		return EXIT_SUCCESS;
 	}
 	else
 	{
-		printf("Usage: %s sourceFilename targetFilename [method]", argv[0]);
+		fprintf(stderr, "Usage: %s sourceFilename targetFilename [sort|addNewWinner]", argv[0]);
 		return EXIT_FAILURE;
 	}
 }
