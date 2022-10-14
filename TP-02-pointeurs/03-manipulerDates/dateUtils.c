@@ -24,12 +24,6 @@ Date creerDateParCopie(void)
   printf("\nCreation d'une date par copie\n");
   Date date;
   initialiseDate(&date);
-  // printf("Jour : ");
-  // scanf("%d", &date.jour);
-  // printf("Mois : ");
-  // scanf("%d", &date.mois);
-  // printf("Annee : ");
-  // scanf("%d", &date.annee);
   return date;
 }
 
@@ -38,11 +32,5 @@ Date *newDate(void)
   printf("\nCreation d'une date en utilisant malloc\n");
   Date *date = malloc(sizeof(Date));
   initialiseDate(date);
-  // printf("Jour : ");
-  // scanf("%d", &date->jour);
-  // printf("Mois : ");
-  // scanf("%d", &date->mois);
-  // printf("Annee : ");
-  // scanf("%d", &date->annee);
   return date;
 }
