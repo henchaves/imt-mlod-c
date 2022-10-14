@@ -159,16 +159,14 @@ Liste cherche_r(Element v, Liste l)
 // version itérative
 Liste retirePremier_i(Element v, Liste l)
 {
-	// uses cherche_i to find the element
-	// links the previous element to the next element
-	// frees the element
-	// returns the list
 	Liste cherche = cherche_i(v, l);
-	if (cherche == NULL)
+	if (equalsElement(l, cherche))
 	{
-		return l;
+		l = l->suiv;
+		cherche->suiv = NULL;
+		detruire_i(cherche);
 	}
-	else
+	else if (!estVide(cherche))
 	{
 		Liste tmp = l;
 		while (!equalsElement(tmp->suiv, cherche))
@@ -178,17 +176,34 @@ Liste retirePremier_i(Element v, Liste l)
 		tmp->suiv = cherche->suiv;
 		cherche->suiv = NULL;
 		detruire_i(cherche);
-		return l;
 	}
+	return l;
 }
 
 // version recursive
 Liste retirePremier_r(Element v, Liste l)
 {
-	return TODO;
+	if (estVide(l))
+		return NULL;
+	else if (equalsElement(l->val, v))
+	{
+		Liste tmp = l->suiv;
+		l->suiv = NULL;
+		detruire_r(l);
+		return tmp;
+	}
+	else
+	{
+		l->suiv = retirePremier_r(v, l->suiv);
+		return l;
+	}
 }
 
 void afficheEnvers_r(Liste l)
 {
-	TODO;
+	if (!estVide(l))
+	{
+		afficheEnvers_r(l->suiv);
+		afficheElement(l->val);
+	}
 }
