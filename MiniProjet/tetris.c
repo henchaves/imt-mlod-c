@@ -1,15 +1,15 @@
 /*******************************************************************************************
-*
-*   raylib - classic game: tetris
-*
-*   Sample game developed by Marc Palau and Ramon Santamaria
-*
-*   This game has been created using raylib v1.3 (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2015 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
+ *
+ *   raylib - classic game: tetris
+ *
+ *   Sample game developed by Marc Palau and Ramon Santamaria
+ *
+ *   This game has been created using raylib v1.3 (www.raylib.com)
+ *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+ *
+ *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
+ *
+ ********************************************************************************************/
 
 #include "raylib.h"
 
@@ -19,27 +19,34 @@
 #include <math.h>
 
 #if defined(PLATFORM_WEB)
-    #include <emscripten/emscripten.h>
+#include <emscripten/emscripten.h>
 #endif
 
 //----------------------------------------------------------------------------------
 // Some Defines
 //----------------------------------------------------------------------------------
-#define SQUARE_SIZE             20
+#define SQUARE_SIZE 20
 
-#define GRID_HORIZONTAL_SIZE    12
-#define GRID_VERTICAL_SIZE      20
+#define GRID_HORIZONTAL_SIZE 12
+#define GRID_VERTICAL_SIZE 20
 
-#define LATERAL_SPEED           10
-#define TURNING_SPEED           12
+#define LATERAL_SPEED 10
+#define TURNING_SPEED 12
 #define FAST_FALL_AWAIT_COUNTER 30
 
-#define FADING_TIME             33
+#define FADING_TIME 33
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
 //----------------------------------------------------------------------------------
-typedef enum GridSquare { EMPTY, MOVING, FULL, BLOCK, FADING } GridSquare;
+typedef enum GridSquare
+{
+    EMPTY,
+    MOVING,
+    FULL,
+    BLOCK,
+    FADING
+} GridSquare;
 
 //------------------------------------------------------------------------------------
 // Global Variables Declaration
@@ -51,9 +58,9 @@ static bool gameOver = false;
 static bool pause = false;
 
 // Matrices
-static GridSquare grid [GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
-static GridSquare piece [4][4];
-static GridSquare incomingPiece [4][4];
+static GridSquare grid[GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
+static GridSquare piece[4][4];
+static GridSquare incomingPiece[4][4];
 
 // Theese variables keep track of the active piece position
 static int piecePositionX = 0;
@@ -61,9 +68,9 @@ static int piecePositionY = 0;
 
 // Game parameters
 static Color fadingColor;
-//static int fallingSpeed;           // In frames
+// static int fallingSpeed;           // In frames
 
-static bool beginPlay = true;      // This var is only true at the begining of the game, used for the first matrix creations
+static bool beginPlay = true; // This var is only true at the begining of the game, used for the first matrix creations
 static bool pieceActive = false;
 static bool detection = false;
 static bool lineToDelete = false;
@@ -86,11 +93,11 @@ static int gravitySpeed = 30;
 //------------------------------------------------------------------------------------
 // Module Functions Declaration (local)
 //------------------------------------------------------------------------------------
-static void InitGame(void);         // Initialize game
-static void UpdateGame(void);       // Update game (one frame)
-static void DrawGame(void);         // Draw game (one frame)
-static void UnloadGame(void);       // Unload game
-static void UpdateDrawFrame(void);  // Update and Draw (one frame)
+static void InitGame(void);        // Initialize game
+static void UpdateGame(void);      // Update game (one frame)
+static void DrawGame(void);        // Draw game (one frame)
+static void UnloadGame(void);      // Unload game
+static void UpdateDrawFrame(void); // Update and Draw (one frame)
 
 // Additional module functions
 static bool Createpiece();
@@ -120,7 +127,7 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         // Update and Draw
         //----------------------------------------------------------------------------------
@@ -130,9 +137,9 @@ int main(void)
 #endif
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    UnloadGame();         // Unload loaded data (textures, sounds, models...)
+    UnloadGame(); // Unload loaded data (textures, sounds, models...)
 
-    CloseWindow();        // Close window and OpenGL context
+    CloseWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
     return 0;
@@ -175,15 +182,17 @@ void InitGame(void)
     {
         for (int j = 0; j < GRID_VERTICAL_SIZE; j++)
         {
-            if ((j == GRID_VERTICAL_SIZE - 1) || (i == 0) || (i == GRID_HORIZONTAL_SIZE - 1)) grid[i][j] = BLOCK;
-            else grid[i][j] = EMPTY;
+            if ((j == GRID_VERTICAL_SIZE - 1) || (i == 0) || (i == GRID_HORIZONTAL_SIZE - 1))
+                grid[i][j] = BLOCK;
+            else
+                grid[i][j] = EMPTY;
         }
     }
 
     // Initialize incoming piece matrices
     for (int i = 0; i < 4; i++)
     {
-        for (int j = 0; j< 4; j++)
+        for (int j = 0; j < 4; j++)
         {
             incomingPiece[i][j] = EMPTY;
         }
@@ -195,7 +204,8 @@ void UpdateGame(void)
 {
     if (!gameOver)
     {
-        if (IsKeyPressed('P')) pause = !pause;
+        if (IsKeyPressed('P'))
+            pause = !pause;
 
         if (!pause)
         {
@@ -209,7 +219,7 @@ void UpdateGame(void)
                     // We leave a little time before starting the fast falling down
                     fastFallMovementCounter = 0;
                 }
-                else    // Piece falling
+                else // Piece falling
                 {
                     // Counters update
                     fastFallMovementCounter++;
@@ -218,8 +228,10 @@ void UpdateGame(void)
                     turnMovementCounter++;
 
                     // We make sure to move if we've pressed the key this frame
-                    if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) lateralMovementCounter = LATERAL_SPEED;
-                    if (IsKeyPressed(KEY_UP)) turnMovementCounter = TURNING_SPEED;
+                    if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT))
+                        lateralMovementCounter = LATERAL_SPEED;
+                    if (IsKeyPressed(KEY_UP))
+                        turnMovementCounter = TURNING_SPEED;
 
                     // Fall down
                     if (IsKeyDown(KEY_DOWN) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER))
@@ -246,14 +258,16 @@ void UpdateGame(void)
                     if (lateralMovementCounter >= LATERAL_SPEED)
                     {
                         // Update the lateral movement and if success, reset the lateral counter
-                        if (!ResolveLateralMovement()) lateralMovementCounter = 0;
+                        if (!ResolveLateralMovement())
+                            lateralMovementCounter = 0;
                     }
 
                     // Turn the piece at player's will
                     if (turnMovementCounter >= TURNING_SPEED)
                     {
                         // Update the turning movement and reset the turning counter
-                        if (ResolveTurnMovement()) turnMovementCounter = 0;
+                        if (ResolveTurnMovement())
+                            turnMovementCounter = 0;
                     }
                 }
 
@@ -274,8 +288,10 @@ void UpdateGame(void)
                 // Animation when deleting lines
                 fadeLineCounter++;
 
-                if (fadeLineCounter%8 < 4) fadingColor = MAROON;
-                else fadingColor = GRAY;
+                if (fadeLineCounter % 8 < 4)
+                    fadingColor = MAROON;
+                else
+                    fadingColor = GRAY;
 
                 if (fadeLineCounter >= FADING_TIME)
                 {
@@ -304,93 +320,95 @@ void DrawGame(void)
 {
     BeginDrawing();
 
-        ClearBackground(RAYWHITE);
+    ClearBackground(RAYWHITE);
 
-        if (!gameOver)
+    if (!gameOver)
+    {
+        // Draw gameplay area
+        Vector2 offset;
+        offset.x = screenWidth / 2 - (GRID_HORIZONTAL_SIZE * SQUARE_SIZE / 2) - 50;
+        offset.y = screenHeight / 2 - ((GRID_VERTICAL_SIZE - 1) * SQUARE_SIZE / 2) + SQUARE_SIZE * 2;
+
+        offset.y -= 50; // NOTE: Harcoded position!
+
+        int controller = offset.x;
+
+        for (int j = 0; j < GRID_VERTICAL_SIZE; j++)
         {
-            // Draw gameplay area
-            Vector2 offset;
-            offset.x = screenWidth/2 - (GRID_HORIZONTAL_SIZE*SQUARE_SIZE/2) - 50;
-            offset.y = screenHeight/2 - ((GRID_VERTICAL_SIZE - 1)*SQUARE_SIZE/2) + SQUARE_SIZE*2;
-
-            offset.y -= 50;     // NOTE: Harcoded position!
-
-            int controller = offset.x;
-
-            for (int j = 0; j < GRID_VERTICAL_SIZE; j++)
+            for (int i = 0; i < GRID_HORIZONTAL_SIZE; i++)
             {
-                for (int i = 0; i < GRID_HORIZONTAL_SIZE; i++)
+                // Draw each square of the grid
+                if (grid[i][j] == EMPTY)
                 {
-                    // Draw each square of the grid
-                    if (grid[i][j] == EMPTY)
-                    {
-                        DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY );
-                        DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        DrawLine(offset.x + SQUARE_SIZE, offset.y, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        offset.x += SQUARE_SIZE;
-                    }
-                    else if (grid[i][j] == FULL)
-                    {
-                        DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
-                        offset.x += SQUARE_SIZE;
-                    }
-                    else if (grid[i][j] == MOVING)
-                    {
-                        DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, DARKGRAY);
-                        offset.x += SQUARE_SIZE;
-                    }
-                    else if (grid[i][j] == BLOCK)
-                    {
-                        DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, LIGHTGRAY);
-                        offset.x += SQUARE_SIZE;
-                    }
-                    else if (grid[i][j] == FADING)
-                    {
-                        DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, fadingColor);
-                        offset.x += SQUARE_SIZE;
-                    }
+                    DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY);
+                    DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    DrawLine(offset.x + SQUARE_SIZE, offset.y, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    offset.x += SQUARE_SIZE;
                 }
-
-                offset.x = controller;
-                offset.y += SQUARE_SIZE;
+                else if (grid[i][j] == FULL)
+                {
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
+                    offset.x += SQUARE_SIZE;
+                }
+                else if (grid[i][j] == MOVING)
+                {
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, DARKGRAY);
+                    offset.x += SQUARE_SIZE;
+                }
+                else if (grid[i][j] == BLOCK)
+                {
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, LIGHTGRAY);
+                    offset.x += SQUARE_SIZE;
+                }
+                else if (grid[i][j] == FADING)
+                {
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, fadingColor);
+                    offset.x += SQUARE_SIZE;
+                }
             }
 
-            // Draw incoming piece (hardcoded)
-            offset.x = 500;
-            offset.y = 45;
-
-            int controler = offset.x;
-
-            for (int j = 0; j < 4; j++)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (incomingPiece[i][j] == EMPTY)
-                    {
-                        DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY );
-                        DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        DrawLine(offset.x + SQUARE_SIZE, offset.y, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
-                        offset.x += SQUARE_SIZE;
-                    }
-                    else if (incomingPiece[i][j] == MOVING)
-                    {
-                        DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
-                        offset.x += SQUARE_SIZE;
-                    }
-                }
-
-                offset.x = controler;
-                offset.y += SQUARE_SIZE;
-            }
-
-            DrawText("INCOMING:", offset.x, offset.y - 100, 10, GRAY);
-            DrawText(TextFormat("LINES:      %04i", lines), offset.x, offset.y + 20, 10, GRAY);
-
-            if (pause) DrawText("GAME PAUSED", screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, screenHeight/2 - 40, 40, GRAY);
+            offset.x = controller;
+            offset.y += SQUARE_SIZE;
         }
-        else DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth()/2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20)/2, GetScreenHeight()/2 - 50, 20, GRAY);
+
+        // Draw incoming piece (hardcoded)
+        offset.x = 500;
+        offset.y = 45;
+
+        int controler = offset.x;
+
+        for (int j = 0; j < 4; j++)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (incomingPiece[i][j] == EMPTY)
+                {
+                    DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY);
+                    DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    DrawLine(offset.x + SQUARE_SIZE, offset.y, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY);
+                    offset.x += SQUARE_SIZE;
+                }
+                else if (incomingPiece[i][j] == MOVING)
+                {
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
+                    offset.x += SQUARE_SIZE;
+                }
+            }
+
+            offset.x = controler;
+            offset.y += SQUARE_SIZE;
+        }
+
+        DrawText("INCOMING:", offset.x, offset.y - 100, 10, GRAY);
+        DrawText(TextFormat("LINES:      %04i", lines), offset.x, offset.y + 20, 10, GRAY);
+
+        if (pause)
+            DrawText("GAME PAUSED", screenWidth / 2 - MeasureText("GAME PAUSED", 40) / 2, screenHeight / 2 - 40, 40, GRAY);
+    }
+    else
+        DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
 
     EndDrawing();
 }
@@ -413,7 +431,7 @@ void UpdateDrawFrame(void)
 //--------------------------------------------------------------------------------------
 static bool Createpiece()
 {
-    piecePositionX = (int)((GRID_HORIZONTAL_SIZE - 4)/2);
+    piecePositionX = (int)((GRID_HORIZONTAL_SIZE - 4) / 2);
     piecePositionY = 0;
 
     // If the game is starting and you are going to create the first piece, we create an extra one
@@ -426,7 +444,7 @@ static bool Createpiece()
     // We assign the incoming piece to the actual piece
     for (int i = 0; i < 4; i++)
     {
-        for (int j = 0; j< 4; j++)
+        for (int j = 0; j < 4; j++)
         {
             piece[i][j] = incomingPiece[i][j];
         }
@@ -440,7 +458,8 @@ static bool Createpiece()
     {
         for (int j = 0; j < 4; j++)
         {
-            if (piece[i - (int)piecePositionX][j] == MOVING) grid[i][j] = MOVING;
+            if (piece[i - (int)piecePositionX][j] == MOVING)
+                grid[i][j] = MOVING;
         }
     }
 
@@ -449,7 +468,7 @@ static bool Createpiece()
 
 static void GetRandompiece()
 {
-    int random = GetRandomValue(0, 6);
+    int random = GetRandomValue(0, 11);
 
     for (int i = 0; i < 4; i++)
     {
@@ -461,13 +480,113 @@ static void GetRandompiece()
 
     switch (random)
     {
-        case 0: { incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; } break;    //Cube
-        case 1: { incomingPiece[1][0] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; } break;    //L
-        case 2: { incomingPiece[1][2] = MOVING; incomingPiece[2][0] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[2][2] = MOVING; } break;    //L inversa
-        case 3: { incomingPiece[0][1] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[3][1] = MOVING; } break;    //Recta
-        case 4: { incomingPiece[1][0] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][1] = MOVING; } break;    //Creu tallada
-        case 5: { incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[2][2] = MOVING; incomingPiece[3][2] = MOVING; } break;    //S
-        case 6: { incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[3][1] = MOVING; } break;    //S inversa
+    case 0:
+    {
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][2] = MOVING;
+    }
+    break; // Cube
+    case 1:
+    {
+        incomingPiece[1][0] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][2] = MOVING;
+    }
+    break; // L
+    case 2:
+    {
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][0] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+    }
+    break; // L inversa
+    case 3:
+    {
+        incomingPiece[0][1] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[3][1] = MOVING;
+    }
+    break; // Recta
+    case 4:
+    {
+        incomingPiece[1][0] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][1] = MOVING;
+    }
+    break; // Creu tallada
+    case 5:
+    {
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[3][2] = MOVING;
+    }
+    break; // S
+    case 6:
+    {
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[3][1] = MOVING;
+    }
+    break; // S inversa
+    case 7:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[1][0] = MOVING;
+        incomingPiece[2][0] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[0][2] = MOVING;
+    }
+    break; // U
+    // create new shapes
+    case 8:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[0][2] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[2][0] = MOVING;
+    }
+    break; // X
+
+    case 9:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[0][3] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[1][2] = MOVING;
+        incomingPiece[2][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[3][0] = MOVING;
+        incomingPiece[3][3] = MOVING;
+    }
+    break; // X-cube
+
+    case 10:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+    }
+    break; // small diagonal
+
+    case 11:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][2] = MOVING;
+        incomingPiece[3][3] = MOVING;
+    }
+    break; // big diagonal
     }
 }
 
@@ -489,7 +608,7 @@ static void ResolveFallingMovement(bool *detection, bool *pieceActive)
             }
         }
     }
-    else    // We move down the piece
+    else // We move down the piece
     {
         for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
         {
@@ -497,7 +616,7 @@ static void ResolveFallingMovement(bool *detection, bool *pieceActive)
             {
                 if (grid[i][j] == MOVING)
                 {
-                    grid[i][j+1] = MOVING;
+                    grid[i][j + 1] = MOVING;
                     grid[i][j] = EMPTY;
                 }
             }
@@ -512,7 +631,7 @@ static bool ResolveLateralMovement()
     bool collision = false;
 
     // Piece movement
-    if (IsKeyDown(KEY_LEFT))        // Move left
+    if (IsKeyDown(KEY_LEFT)) // Move left
     {
         // Check if is possible to move to left
         for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
@@ -522,7 +641,8 @@ static bool ResolveLateralMovement()
                 if (grid[i][j] == MOVING)
                 {
                     // Check if we are touching the left wall or we have a full square at the left
-                    if ((i-1 == 0) || (grid[i-1][j] == FULL)) collision = true;
+                    if ((i - 1 == 0) || (grid[i - 1][j] == FULL))
+                        collision = true;
                 }
             }
         }
@@ -532,12 +652,12 @@ static bool ResolveLateralMovement()
         {
             for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
             {
-                for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)             // We check the matrix from left to right
+                for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++) // We check the matrix from left to right
                 {
                     // Move everything to the left
                     if (grid[i][j] == MOVING)
                     {
-                        grid[i-1][j] = MOVING;
+                        grid[i - 1][j] = MOVING;
                         grid[i][j] = EMPTY;
                     }
                 }
@@ -546,7 +666,7 @@ static bool ResolveLateralMovement()
             piecePositionX--;
         }
     }
-    else if (IsKeyDown(KEY_RIGHT))  // Move right
+    else if (IsKeyDown(KEY_RIGHT)) // Move right
     {
         // Check if is possible to move to right
         for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
@@ -556,10 +676,9 @@ static bool ResolveLateralMovement()
                 if (grid[i][j] == MOVING)
                 {
                     // Check if we are touching the right wall or we have a full square at the right
-                    if ((i+1 == GRID_HORIZONTAL_SIZE - 1) || (grid[i+1][j] == FULL))
+                    if ((i + 1 == GRID_HORIZONTAL_SIZE - 1) || (grid[i + 1][j] == FULL))
                     {
                         collision = true;
-
                     }
                 }
             }
@@ -570,12 +689,12 @@ static bool ResolveLateralMovement()
         {
             for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
             {
-                for (int i = GRID_HORIZONTAL_SIZE - 1; i >= 1; i--)             // We check the matrix from right to left
+                for (int i = GRID_HORIZONTAL_SIZE - 1; i >= 1; i--) // We check the matrix from right to left
                 {
                     // Move everything to the right
                     if (grid[i][j] == MOVING)
                     {
-                        grid[i+1][j] = MOVING;
+                        grid[i + 1][j] = MOVING;
                         grid[i][j] = EMPTY;
                     }
                 }
@@ -599,67 +718,83 @@ static bool ResolveTurnMovement()
         // Check all turning possibilities
         if ((grid[piecePositionX + 3][piecePositionY] == MOVING) &&
             (grid[piecePositionX][piecePositionY] != EMPTY) &&
-            (grid[piecePositionX][piecePositionY] != MOVING)) checker = true;
+            (grid[piecePositionX][piecePositionY] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 3][piecePositionY + 3] == MOVING) &&
             (grid[piecePositionX + 3][piecePositionY] != EMPTY) &&
-            (grid[piecePositionX + 3][piecePositionY] != MOVING)) checker = true;
+            (grid[piecePositionX + 3][piecePositionY] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX][piecePositionY + 3] == MOVING) &&
             (grid[piecePositionX + 3][piecePositionY + 3] != EMPTY) &&
-            (grid[piecePositionX + 3][piecePositionY + 3] != MOVING)) checker = true;
+            (grid[piecePositionX + 3][piecePositionY + 3] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX][piecePositionY] == MOVING) &&
             (grid[piecePositionX][piecePositionY + 3] != EMPTY) &&
-            (grid[piecePositionX][piecePositionY + 3] != MOVING)) checker = true;
+            (grid[piecePositionX][piecePositionY + 3] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 1][piecePositionY] == MOVING) &&
             (grid[piecePositionX][piecePositionY + 2] != EMPTY) &&
-            (grid[piecePositionX][piecePositionY + 2] != MOVING)) checker = true;
+            (grid[piecePositionX][piecePositionY + 2] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 3][piecePositionY + 1] == MOVING) &&
             (grid[piecePositionX + 1][piecePositionY] != EMPTY) &&
-            (grid[piecePositionX + 1][piecePositionY] != MOVING)) checker = true;
+            (grid[piecePositionX + 1][piecePositionY] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 2][piecePositionY + 3] == MOVING) &&
             (grid[piecePositionX + 3][piecePositionY + 1] != EMPTY) &&
-            (grid[piecePositionX + 3][piecePositionY + 1] != MOVING)) checker = true;
+            (grid[piecePositionX + 3][piecePositionY + 1] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX][piecePositionY + 2] == MOVING) &&
             (grid[piecePositionX + 2][piecePositionY + 3] != EMPTY) &&
-            (grid[piecePositionX + 2][piecePositionY + 3] != MOVING)) checker = true;
+            (grid[piecePositionX + 2][piecePositionY + 3] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 2][piecePositionY] == MOVING) &&
             (grid[piecePositionX][piecePositionY + 1] != EMPTY) &&
-            (grid[piecePositionX][piecePositionY + 1] != MOVING)) checker = true;
+            (grid[piecePositionX][piecePositionY + 1] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 3][piecePositionY + 2] == MOVING) &&
             (grid[piecePositionX + 2][piecePositionY] != EMPTY) &&
-            (grid[piecePositionX + 2][piecePositionY] != MOVING)) checker = true;
+            (grid[piecePositionX + 2][piecePositionY] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 1][piecePositionY + 3] == MOVING) &&
             (grid[piecePositionX + 3][piecePositionY + 2] != EMPTY) &&
-            (grid[piecePositionX + 3][piecePositionY + 2] != MOVING)) checker = true;
+            (grid[piecePositionX + 3][piecePositionY + 2] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX][piecePositionY + 1] == MOVING) &&
             (grid[piecePositionX + 1][piecePositionY + 3] != EMPTY) &&
-            (grid[piecePositionX + 1][piecePositionY + 3] != MOVING)) checker = true;
+            (grid[piecePositionX + 1][piecePositionY + 3] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 1][piecePositionY + 1] == MOVING) &&
             (grid[piecePositionX + 1][piecePositionY + 2] != EMPTY) &&
-            (grid[piecePositionX + 1][piecePositionY + 2] != MOVING)) checker = true;
+            (grid[piecePositionX + 1][piecePositionY + 2] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 2][piecePositionY + 1] == MOVING) &&
             (grid[piecePositionX + 1][piecePositionY + 1] != EMPTY) &&
-            (grid[piecePositionX + 1][piecePositionY + 1] != MOVING)) checker = true;
+            (grid[piecePositionX + 1][piecePositionY + 1] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 2][piecePositionY + 2] == MOVING) &&
             (grid[piecePositionX + 2][piecePositionY + 1] != EMPTY) &&
-            (grid[piecePositionX + 2][piecePositionY + 1] != MOVING)) checker = true;
+            (grid[piecePositionX + 2][piecePositionY + 1] != MOVING))
+            checker = true;
 
         if ((grid[piecePositionX + 1][piecePositionY + 2] == MOVING) &&
             (grid[piecePositionX + 2][piecePositionY + 2] != EMPTY) &&
-            (grid[piecePositionX + 2][piecePositionY + 2] != MOVING)) checker = true;
+            (grid[piecePositionX + 2][piecePositionY + 2] != MOVING))
+            checker = true;
 
         if (!checker)
         {
@@ -722,7 +857,8 @@ static void CheckDetection(bool *detection)
     {
         for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
         {
-            if ((grid[i][j] == MOVING) && ((grid[i][j+1] == FULL) || (grid[i][j+1] == BLOCK))) *detection = true;
+            if ((grid[i][j] == MOVING) && ((grid[i][j + 1] == FULL) || (grid[i][j + 1] == BLOCK)))
+                *detection = true;
         }
     }
 }
@@ -773,24 +909,24 @@ static int DeleteCompleteLines()
                 grid[i][j] = EMPTY;
             }
 
-            for (int j2 = j-1; j2 >= 0; j2--)
+            for (int j2 = j - 1; j2 >= 0; j2--)
             {
                 for (int i2 = 1; i2 < GRID_HORIZONTAL_SIZE - 1; i2++)
                 {
                     if (grid[i2][j2] == FULL)
                     {
-                        grid[i2][j2+1] = FULL;
+                        grid[i2][j2 + 1] = FULL;
                         grid[i2][j2] = EMPTY;
                     }
                     else if (grid[i2][j2] == FADING)
                     {
-                        grid[i2][j2+1] = FADING;
+                        grid[i2][j2 + 1] = FADING;
                         grid[i2][j2] = EMPTY;
                     }
                 }
             }
 
-             deletedLines++;
+            deletedLines++;
         }
     }
 
