@@ -56,6 +56,7 @@ static const int screenHeight = 450;
 
 static bool gameOver = false;
 static bool pause = false;
+static Color pieceColor = GRAY;
 
 // Matrices
 static GridSquare grid[GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
@@ -315,6 +316,24 @@ void UpdateGame(void)
     }
 }
 
+Color GetRandomColor()
+{
+    int color = GetRandomValue(0, 1);
+
+    switch (color)
+    {
+    case 0:
+        return YELLOW;
+        break;
+    case 1:
+        return GREEN;
+        break;
+    default:
+        return GRAY;
+        break;
+    }
+}
+
 // Draw game (one frame)
 void DrawGame(void)
 {
@@ -353,7 +372,7 @@ void DrawGame(void)
                 }
                 else if (grid[i][j] == MOVING)
                 {
-                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, DARKGRAY);
+                    DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, pieceColor);
                     offset.x += SQUARE_SIZE;
                 }
                 else if (grid[i][j] == BLOCK)
@@ -588,6 +607,8 @@ static void GetRandompiece()
     }
     break; // big diagonal
     }
+
+    pieceColor = GetRandomColor();
 }
 
 static void ResolveFallingMovement(bool *detection, bool *pieceActive)
