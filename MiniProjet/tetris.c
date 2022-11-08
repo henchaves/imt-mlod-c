@@ -28,7 +28,7 @@
 #define SQUARE_SIZE 20
 
 #define GRID_HORIZONTAL_SIZE 12
-#define GRID_VERTICAL_SIZE 20
+#define GRID_VERTICAL_SIZE 26
 
 #define LATERAL_SPEED 10
 #define TURNING_SPEED 12
@@ -52,7 +52,7 @@ typedef enum GridSquare
 // Global Variables Declaration
 //------------------------------------------------------------------------------------
 static const int screenWidth = 800;
-static const int screenHeight = 450;
+static const int screenHeight = 600;
 
 static bool gameOver = false;
 static bool pause = false;
@@ -119,7 +119,7 @@ int main(void)
 {
     // Initialization (Note windowTitle is unused on Android)
     //---------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "classic game: tetris");
+    InitWindow(screenWidth, screenHeight, "Game: Tetris for two");
 
     InitGame();
 
@@ -454,9 +454,10 @@ void DrawGame(void)
     }
     else
     {
-        DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
+        DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 40) / 2, screenHeight / 2 - 100, 40, GRAY);
         DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), GetScreenWidth() / 2 - MeasureText(TextFormat("P1\t LINES:      %04i", p1Lines), 20) / 2, GetScreenHeight() / 2, 20, BLUE);
         DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), GetScreenWidth() / 2 - MeasureText(TextFormat("P1\t LINES:      %04i", p1Lines), 20) / 2, GetScreenHeight() / 2 + 50, 20, RED);
+        DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
     }
     EndDrawing();
 }
