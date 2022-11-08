@@ -79,7 +79,8 @@ static bool lineToDelete = false;
 
 // Statistics
 static int level = 1;
-static int lines = 0;
+static int p1Lines = 0;
+static int p2Lines = 0;
 
 // Counters
 static int gravityMovementCounter = 0;
@@ -156,7 +157,8 @@ void InitGame(void)
 {
     // Initialize game statistics
     level = 1;
-    lines = 0;
+    p1Lines = 0;
+    p2Lines = 0;
 
     fadingColor = GRAY;
 
@@ -312,7 +314,10 @@ void UpdateGame(void)
                     fadeLineCounter = 0;
                     lineToDelete = false;
 
-                    lines += deletedLines;
+                    if (activePlayer == 1)
+                        p1Lines += deletedLines;
+                    else
+                        p2Lines += deletedLines;
                 }
             }
         }
@@ -432,15 +437,18 @@ void DrawGame(void)
         }
 
         DrawText("INCOMING:", offset.x, offset.y - 100, 10, GRAY);
-        DrawText(TextFormat("P1\t LINES:      %04i", lines), offset.x, offset.y + 20, 10, BLUE);
-        DrawText(TextFormat("P2\tLINES:      %04i", lines), offset.x, offset.y + 40, 10, RED);
+        DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), offset.x, offset.y + 20, 10, BLUE);
+        DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), offset.x, offset.y + 40, 10, RED);
 
         if (pause)
             DrawText("GAME PAUSED", screenWidth / 2 - MeasureText("GAME PAUSED", 40) / 2, screenHeight / 2 - 40, 40, GRAY);
     }
     else
+    {
         DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
-
+        DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), GetScreenWidth() / 2 - MeasureText("P1\t LINES:", 20) / 2, GetScreenHeight() / 2, 20, BLUE);
+        DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), GetScreenWidth() / 2 - MeasureText("P1\t LINES:", 20) / 2, GetScreenHeight() / 2 + 50, 20, RED);
+    }
     EndDrawing();
 }
 
