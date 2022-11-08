@@ -12,7 +12,6 @@ void showElement(Element e)
 
 void destroyElement(Element e)
 {
-  free(e);
 }
 
 bool equalsElement(Element e1, Element e2)
