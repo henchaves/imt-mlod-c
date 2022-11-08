@@ -33,6 +33,6 @@ int main()
   l = addHead("un", l);
   l = addHead("Luke", l);
   showList_i(l);
-  destroyList_i(l);
+  destroyList_r(l);
   return 0;
 }
