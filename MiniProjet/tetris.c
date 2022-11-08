@@ -337,9 +337,9 @@ Color GetPieceColor(int player)
     switch (player)
     {
     case 1:
-        return YELLOW;
+        return BLUE;
     case 2:
-        return GREEN;
+        return RED;
     default:
         return GRAY;
     }
@@ -432,7 +432,8 @@ void DrawGame(void)
         }
 
         DrawText("INCOMING:", offset.x, offset.y - 100, 10, GRAY);
-        DrawText(TextFormat("LINES:      %04i", lines), offset.x, offset.y + 20, 10, GRAY);
+        DrawText(TextFormat("P1\t LINES:      %04i", lines), offset.x, offset.y + 20, 10, BLUE);
+        DrawText(TextFormat("P2\tLINES:      %04i", lines), offset.x, offset.y + 40, 10, RED);
 
         if (pause)
             DrawText("GAME PAUSED", screenWidth / 2 - MeasureText("GAME PAUSED", 40) / 2, screenHeight / 2 - 40, 40, GRAY);
