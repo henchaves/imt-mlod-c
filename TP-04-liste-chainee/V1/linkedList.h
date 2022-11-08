@@ -18,13 +18,13 @@ List create(Element e);
 
 List addHead(Element e, List l);
 
-void showElement(Element e);
+extern void showElement(Element e);
 
 void showList_i(List l);
 
 void showList_r(List l);
 
-void destroyElement(Element e);
+extern void destroyElement(Element e);
 
 void destroyList_i(List l);
 
@@ -33,6 +33,8 @@ void destroyList_r(List l);
 List addTail_i(Element e, List l);
 
 List addTail_r(Element e, List l);
+
+extern bool equalsElement(Element e1, Element e2);
 
 List search_i(Element e, List l);
 
