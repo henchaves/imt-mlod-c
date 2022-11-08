@@ -27,11 +27,6 @@ List addHead(Element e, List l)
   return new;
 }
 
-// void showElement(Element e)
-// {
-//   printf("%i ", e);
-// }
-
 void showList_i(List l)
 {
   while (!isEmpty(l))
@@ -54,11 +49,6 @@ void showList_r(List l)
     printf("\n");
   }
 }
-
-// void destroyElement(Element e)
-// {
-//   // nothing to do
-// }
 
 void destroyList_i(List l)
 {
@@ -111,11 +101,6 @@ List addTail_r(Element e, List l)
     return l;
   }
 }
-
-// bool equalsElement(Element e1, Element e2)
-// {
-//   return e1 == e2;
-// }
 
 List search_i(Element e, List l)
 {
@@ -174,7 +159,7 @@ List removeFirst_r(Element e, List l)
   }
   else
   {
-    l->next = retirePremier_r(e, l->next);
+    l->next = removeFirst_r(e, l->next);
     return l;
   }
 }
