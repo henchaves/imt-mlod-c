@@ -435,7 +435,16 @@ void DrawGame(void)
             offset.x = controler;
             offset.y += SQUARE_SIZE;
         }
-
+        // draw active player in the left side of the screen
+        DrawText("ACTIVE PLAYER:", 10, offset.y - 100, 20, BLACK);
+        if (activePlayer == 1)
+        {
+            DrawText("PLAYER 1 (W-A-S-D)", 10, offset.y - 70, 20, BLUE);
+        }
+        else
+        {
+            DrawText("PLAYER 2 (ARROWS)", 10, offset.y - 70, 20, RED);
+        }
         DrawText("INCOMING:", offset.x, offset.y - 100, 10, GRAY);
         DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), offset.x, offset.y + 20, 10, BLUE);
         DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), offset.x, offset.y + 40, 10, RED);
@@ -446,8 +455,8 @@ void DrawGame(void)
     else
     {
         DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
-        DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), GetScreenWidth() / 2 - MeasureText("P1\t LINES:", 20) / 2, GetScreenHeight() / 2, 20, BLUE);
-        DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), GetScreenWidth() / 2 - MeasureText("P1\t LINES:", 20) / 2, GetScreenHeight() / 2 + 50, 20, RED);
+        DrawText(TextFormat("P1\t LINES:      %04i", p1Lines), GetScreenWidth() / 2 - MeasureText(TextFormat("P1\t LINES:      %04i", p1Lines), 20) / 2, GetScreenHeight() / 2, 20, BLUE);
+        DrawText(TextFormat("P2\tLINES:      %04i", p2Lines), GetScreenWidth() / 2 - MeasureText(TextFormat("P1\t LINES:      %04i", p1Lines), 20) / 2, GetScreenHeight() / 2 + 50, 20, RED);
     }
     EndDrawing();
 }
