@@ -230,13 +230,23 @@ void UpdateGame(void)
                     turnMovementCounter++;
 
                     // We make sure to move if we've pressed the key this frame
+                    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_D))
+                        lateralMovementCounter = LATERAL_SPEED;
                     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT))
                         lateralMovementCounter = LATERAL_SPEED;
+                    if (IsKeyPressed(KEY_W))
+                        turnMovementCounter = TURNING_SPEED;
                     if (IsKeyPressed(KEY_UP))
                         turnMovementCounter = TURNING_SPEED;
 
                     // Fall down
-                    if (IsKeyDown(KEY_DOWN) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER))
+                    if (IsKeyDown(KEY_S) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER) && (activePlayer == 1))
+                    {
+                        // We make sure the piece is going to fall this frame
+                        gravityMovementCounter += gravitySpeed;
+                    }
+
+                    if (IsKeyDown(KEY_DOWN) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER) && (activePlayer == 2))
                     {
                         // We make sure the piece is going to fall this frame
                         gravityMovementCounter += gravitySpeed;
@@ -649,82 +659,107 @@ static void ResolveFallingMovement(bool *detection, bool *pieceActive)
     }
 }
 
+bool MoveToLeft(bool collision)
+{
+    // Check if is possible to move to left
+    for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
+    {
+        for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
+        {
+            if (grid[i][j] == MOVING)
+            {
+                // Check if we are touching the left wall or we have a full square at the left
+                if ((i - 1 == 0) || (grid[i - 1][j] == FULL))
+                    collision = true;
+            }
+        }
+    }
+
+    // If able, move left
+    if (!collision)
+    {
+        for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
+        {
+            for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++) // We check the matrix from left to right
+            {
+                // Move everything to the left
+                if (grid[i][j] == MOVING)
+                {
+                    grid[i - 1][j] = MOVING;
+                    grid[i][j] = EMPTY;
+                }
+            }
+        }
+
+        piecePositionX--;
+    }
+
+    return collision;
+}
+
+bool MoveToRight(bool collision)
+{
+    // Check if is possible to move to right
+    for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
+    {
+        for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
+        {
+            if (grid[i][j] == MOVING)
+            {
+                // Check if we are touching the right wall or we have a full square at the right
+                if ((i + 1 == GRID_HORIZONTAL_SIZE - 1) || (grid[i + 1][j] == FULL))
+                {
+                    collision = true;
+                }
+            }
+        }
+    }
+
+    // If able move right
+    if (!collision)
+    {
+        for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
+        {
+            for (int i = GRID_HORIZONTAL_SIZE - 1; i >= 1; i--) // We check the matrix from right to left
+            {
+                // Move everything to the right
+                if (grid[i][j] == MOVING)
+                {
+                    grid[i + 1][j] = MOVING;
+                    grid[i][j] = EMPTY;
+                }
+            }
+        }
+
+        piecePositionX++;
+    }
+
+    return collision;
+}
+
 static bool ResolveLateralMovement()
 {
     bool collision = false;
 
-    // Piece movement
-    if (IsKeyDown(KEY_LEFT)) // Move left
+    if (activePlayer == 1)
     {
-        // Check if is possible to move to left
-        for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
-        {
-            for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
-            {
-                if (grid[i][j] == MOVING)
-                {
-                    // Check if we are touching the left wall or we have a full square at the left
-                    if ((i - 1 == 0) || (grid[i - 1][j] == FULL))
-                        collision = true;
-                }
-            }
-        }
+        if (IsKeyPressed(KEY_A))
+            collision = MoveToLeft(collision);
 
-        // If able, move left
-        if (!collision)
-        {
-            for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
-            {
-                for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++) // We check the matrix from left to right
-                {
-                    // Move everything to the left
-                    if (grid[i][j] == MOVING)
-                    {
-                        grid[i - 1][j] = MOVING;
-                        grid[i][j] = EMPTY;
-                    }
-                }
-            }
-
-            piecePositionX--;
-        }
+        if (IsKeyPressed(KEY_D))
+            collision = MoveToRight(collision);
     }
+    else if (activePlayer == 2)
+    {
+        if (IsKeyPressed(KEY_LEFT))
+            collision = MoveToLeft(collision);
+
+        if (IsKeyPressed(KEY_RIGHT))
+            collision = MoveToRight(collision);
+    }
+
     else if (IsKeyDown(KEY_RIGHT)) // Move right
     {
-        // Check if is possible to move to right
-        for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
-        {
-            for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
-            {
-                if (grid[i][j] == MOVING)
-                {
-                    // Check if we are touching the right wall or we have a full square at the right
-                    if ((i + 1 == GRID_HORIZONTAL_SIZE - 1) || (grid[i + 1][j] == FULL))
-                    {
-                        collision = true;
-                    }
-                }
-            }
-        }
-
-        // If able move right
-        if (!collision)
-        {
-            for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
-            {
-                for (int i = GRID_HORIZONTAL_SIZE - 1; i >= 1; i--) // We check the matrix from right to left
-                {
-                    // Move everything to the right
-                    if (grid[i][j] == MOVING)
-                    {
-                        grid[i + 1][j] = MOVING;
-                        grid[i][j] = EMPTY;
-                    }
-                }
-            }
-
-            piecePositionX++;
-        }
     }
 
     return collision;
@@ -733,7 +768,7 @@ static bool ResolveLateralMovement()
 static bool ResolveTurnMovement()
 {
     // Input for turning the piece
-    if (IsKeyDown(KEY_UP))
+    if ((IsKeyDown(KEY_UP) && (activePlayer == 2)) || (IsKeyDown(KEY_W) && (activePlayer == 1)))
     {
         GridSquare aux;
         bool checker = false;
