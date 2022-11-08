@@ -57,6 +57,7 @@ static const int screenHeight = 450;
 static bool gameOver = false;
 static bool pause = false;
 static Color pieceColor = GRAY;
+static int activePlayer = 1;
 
 // Matrices
 static GridSquare grid[GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
@@ -316,21 +317,21 @@ void UpdateGame(void)
     }
 }
 
-Color GetRandomColor()
+int GetRandomPlayer()
 {
-    int color = GetRandomValue(0, 1);
+    return GetRandomValue(1, 2);
+}
 
-    switch (color)
+Color GetPieceColor(int player)
+{
+    switch (player)
     {
-    case 0:
-        return YELLOW;
-        break;
     case 1:
+        return YELLOW;
+    case 2:
         return GREEN;
-        break;
     default:
         return GRAY;
-        break;
     }
 }
 
@@ -608,7 +609,8 @@ static void GetRandompiece()
     break; // big diagonal
     }
 
-    pieceColor = GetRandomColor();
+    activePlayer = GetRandomPlayer();
+    pieceColor = GetPieceColor(activePlayer);
 }
 
 static void ResolveFallingMovement(bool *detection, bool *pieceActive)
