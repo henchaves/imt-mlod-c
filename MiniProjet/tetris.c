@@ -516,7 +516,7 @@ static bool Createpiece()
 
 static void GetRandompiece()
 {
-    int random = GetRandomValue(0, 11);
+    int random = GetRandomValue(0, 13);
 
     for (int i = 0; i < 4; i++)
     {
@@ -635,6 +635,28 @@ static void GetRandompiece()
         incomingPiece[3][3] = MOVING;
     }
     break; // big diagonal
+
+    case 12:
+    {
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[0][1] = MOVING;
+        incomingPiece[0][2] = MOVING;
+        incomingPiece[1][1] = MOVING;
+        incomingPiece[2][1] = MOVING;
+    } // T
+    break;
+
+    case 13:
+    {
+        // draw a table
+        incomingPiece[0][0] = MOVING;
+        incomingPiece[0][1] = MOVING;
+        incomingPiece[0][2] = MOVING;
+        incomingPiece[0][3] = MOVING;
+        incomingPiece[1][0] = MOVING;
+        incomingPiece[1][3] = MOVING;
+    }
+    break;
     }
 
     activePlayer = GetRandomPlayer();
