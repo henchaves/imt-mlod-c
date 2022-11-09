@@ -4,9 +4,15 @@
 - quelle(s) modifications, ... ?
 > 1) Ajouter d'autres formes géométriques;
 > 2) Créer un mode de jeu à 2 joueurs; 
-> 3) Montrer combien de lignes ont explosé.
+> 3) Montrer combien de lignes ont explosé pour chaque joueur.
 # Comment compiler
+```
+make all
+```
 # Comment exécuter
+```
+./tetris
+```
 # Comment utiliser le projet
 screenshot(s) du jeu
 règles, touches, ...
