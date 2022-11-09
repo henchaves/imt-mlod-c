@@ -34,6 +34,7 @@ void showElement(Element e)
   printf("Title: %s\n", e->name);
   printf("Artist: %s\n", e->artist);
   printf("Album: %s\n", e->album);
+  printf("Genre: %s\n", e->genre);
   printf("Disc number: %d\n", e->discNumber);
   printf("Track number: %d\n", e->trackNumber);
   printf("Year: %d\n", e->year);
