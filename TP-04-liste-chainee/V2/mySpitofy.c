@@ -23,7 +23,7 @@ Element createNewMusic(char *name, char *artist, char *album, char *genre, int d
   return e;
 }
 
-List readMusics(char *sourceFilename, int numberOfMusics)
+List readMusics(char *sourceFilename)
 {
   List l = NULL;
   FILE *sourceFile = fopen(sourceFilename, "r");
@@ -36,6 +36,14 @@ List readMusics(char *sourceFilename, int numberOfMusics)
     fprintf(stderr, "Impossible d'ouvrir le fichier %s", sourceFilename);
     exit(EXIT_FAILURE);
   }
+
+  int numberOfMusics = 0;
+  while (fgets(buffer, BUFFER_SIZE, sourceFile) != NULL)
+  {
+    numberOfMusics++;
+  }
+
+  rewind(sourceFile);
 
   for (int i = 0; i < numberOfMusics; i++)
   {
@@ -66,7 +74,7 @@ List readMusics(char *sourceFilename, int numberOfMusics)
 
 int main()
 {
-  List l = readMusics("music.csv", 10);
+  List l = readMusics("music.csv");
   showList_r(l);
   return 0;
 }
