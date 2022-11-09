@@ -2,9 +2,7 @@
 
 #include <stdbool.h>
 
-typedef Music Element;
-
-typedef struct
+typedef struct Music
 {
   char *name;
   char *artist;
@@ -14,6 +12,8 @@ typedef struct
   int trackNumber;
   int year;
 } Music;
+
+typedef Music *Element;
 
 typedef struct Node
 {
