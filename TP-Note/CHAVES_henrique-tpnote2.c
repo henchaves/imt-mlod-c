@@ -13,19 +13,37 @@ typedef struct Chunk
 
 typedef Chunk *String;
 
-String string_new(char string[CHUNK_SIZE_MAX])
+String string_new(char *string)
 {
-  int stringSize = strlen(string);
-  if (stringSize > CHUNK_SIZE_MAX)
-    stringSize = CHUNK_SIZE_MAX;
+  String stringList = malloc(sizeof(Chunk));
+  String stringListHead = stringList;
+  int numberOfChunks = strlen(string) / CHUNK_SIZE_MAX;
+  int lastChunkSize = strlen(string) % CHUNK_SIZE_MAX;
+  if (lastChunkSize != 0)
+    numberOfChunks++;
 
-  String newString = malloc(sizeof(Chunk));
-  newString->chunkSize = stringSize;
-  newString->next = NULL;
-  newString->chunk = malloc(stringSize * sizeof(char));
-  for (int i = 0; i < stringSize; i++)
-    newString->chunk[i] = string[i];
-  return newString;
+  for (int i = 0; i < numberOfChunks; i++)
+  {
+    if (i != 0)
+    {
+      stringList->next = malloc(sizeof(Chunk));
+      stringList = stringList->next;
+    }
+
+    if (i != numberOfChunks - 1)
+      stringList->chunkSize = CHUNK_SIZE_MAX;
+    else
+      stringList->chunkSize = lastChunkSize;
+
+    stringList->chunk = calloc(stringList->chunkSize, sizeof(char));
+
+    for (int j = 0; j < stringList->chunkSize; j++)
+      stringList->chunk[j] = string[i * CHUNK_SIZE_MAX + j];
+  }
+
+  stringList->next = NULL;
+
+  return stringListHead;
 }
 
 unsigned int string_size(String string)
@@ -37,6 +55,10 @@ unsigned int string_size(String string)
     string = string->next;
   }
   return size;
+}
+
+void string_insert_at(String string, int index, char *stringToInsert)
+{
 }
 
 int main()
