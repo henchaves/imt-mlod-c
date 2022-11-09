@@ -57,9 +57,22 @@ unsigned int string_size(String string)
   return size;
 }
 
-void string_insert_at(String string, int index, char *stringToInsert)
-{
-}
+// String string_insert_at(String stringList, int index, char *stringToInsert)
+// {
+//   // recursive algorithm
+//   index--;
+//   if (index == 0)
+//   {
+//     String stringToInsertList = string_new(stringToInsert);
+//     stringToInsertList->next = stringList;
+//     return stringToInsertList;
+//   }
+//   else
+//   {
+//     stringList->next = string_insert_at(stringList->next, index, stringToInsert);
+//     return stringList;
+//   }
+// }
 
 int main()
 {
