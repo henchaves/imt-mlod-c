@@ -28,8 +28,21 @@ String string_new(char string[CHUNK_SIZE_MAX])
   return newString;
 }
 
+unsigned int string_size(String string)
+{
+  unsigned int size = 0;
+  while (string != NULL)
+  {
+    size += string->chunkSize;
+    string = string->next;
+  }
+  return size;
+}
+
 int main()
 {
   String s = string_new("HELLO !");
+  unsigned int size = string_size(s);
   printf("%s", s->chunk);
+  printf("%d", size);
 }
