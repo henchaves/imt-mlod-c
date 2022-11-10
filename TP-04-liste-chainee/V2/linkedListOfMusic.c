@@ -1,137 +1,39 @@
 #include "linkedListOfMusic.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-bool isEmpty(List l)
-{
-  return l == NULL;
-}
-
-List create(Element e)
-{
-  List l = malloc(sizeof(Node));
-  if (isEmpty(l))
-  {
-    fprintf(stderr, "Error: malloc failed");
-    exit(EXIT_FAILURE);
-  }
-  l->element = e;
-  l->next = NULL;
-  return l;
-}
-
-List addHead(Element e, List l)
-{
-  List new = create(e);
-  new->next = l;
-  return new;
-}
 
 void showElement(Element e)
 {
+  Music *m = (Music *)e;
   printf("------------------------\n");
-  printf("Title: %s\n", e->name);
-  printf("Artist: %s\n", e->artist);
-  printf("Album: %s\n", e->album);
-  printf("Genre: %s\n", e->genre);
-  printf("Disc number: %d\n", e->discNumber);
-  printf("Track number: %d\n", e->trackNumber);
-  printf("Year: %d\n", e->year);
+  printf("Title: %s\n", m->name);
+  printf("Artist: %s\n", m->artist);
+  printf("Album: %s\n", m->album);
+  printf("Genre: %s\n", m->genre);
+  printf("Disc number: %d\n", m->discNumber);
+  printf("Track number: %d\n", m->trackNumber);
+  printf("Year: %d\n", m->year);
   printf("------------------------\n");
-}
-
-void showList_i(List l)
-{
-  while (!isEmpty(l))
-  {
-    showElement(l->element);
-    l = l->next;
-  }
-  printf("\n");
-}
-
-void showList_r(List l)
-{
-  if (!isEmpty(l))
-  {
-    showElement(l->element);
-    showList_r(l->next);
-  }
-  else
-  {
-    printf("\n");
-  }
 }
 
 void destroyElement(Element e)
 {
-  free(e->name);
-  free(e->artist);
-  free(e->album);
-  free(e);
-}
-
-void destroyList_i(List l)
-{
-  while (!isEmpty(l))
-  {
-    List tmp = l;
-    l = l->next;
-    destroyElement(tmp->element);
-    free(tmp);
-  }
-}
-
-void destroyList_r(List l)
-{
-  if (!isEmpty(l))
-  {
-    destroyList_r(l->next);
-    destroyElement(l->element);
-    free(l);
-  }
-}
-
-List addTail_i(Element e, List l)
-{
-  if (isEmpty(l))
-  {
-    return create(e);
-  }
-  else
-  {
-    List tmp = l;
-    while (!isEmpty(tmp->next))
-    {
-      tmp = tmp->next;
-    }
-    tmp->next = create(e);
-    return l;
-  }
-}
-
-List addTail_r(Element e, List l)
-{
-  if (isEmpty(l))
-  {
-    return create(e);
-  }
-  else
-  {
-    l->next = addTail_r(e, l->next);
-    return l;
-  }
+  Music *m = (Music *)e;
+  free(m->name);
+  free(m->artist);
+  free(m->album);
+  free(m);
 }
 
 bool equalsElement(Element e1, Element e2)
 {
-  if (strcmp(e1->name, e2->name) == 0 &&
-      strcmp(e1->artist, e2->artist) == 0 &&
-      strcmp(e1->album, e2->album) == 0 &&
-      e1->discNumber == e2->discNumber &&
-      e1->trackNumber == e2->trackNumber &&
-      e1->year == e2->year)
+  Music *m1 = (Music *)e1;
+  Music *m2 = (Music *)e2;
+
+  if (strcmp(m1->name, m2->name) == 0 &&
+      strcmp(m1->artist, m2->artist) == 0 &&
+      strcmp(m1->album, m2->album) == 0 &&
+      m1->discNumber == m2->discNumber &&
+      m1->trackNumber == m2->trackNumber &&
+      m1->year == m2->year)
   {
     return true;
   }
@@ -141,73 +43,103 @@ bool equalsElement(Element e1, Element e2)
   }
 }
 
-List search_i(Element e, List l)
+Music *createNewMusic(char *name, char *artist, char *album, char *genre, int discNumber, int trackNumber, int year)
 {
-  while (!isEmpty(l))
-  {
-    if (equalsElement(l->element, e))
-      return l;
-    l = l->next;
-  }
-  return NULL;
+  Music *e = malloc(sizeof(Music));
+  e->name = malloc(sizeof(char) * (strlen(name) + 1));
+  strcpy(e->name, name);
+  e->artist = malloc(sizeof(char) * (strlen(artist) + 1));
+  strcpy(e->artist, artist);
+  e->album = malloc(sizeof(char) * (strlen(album) + 1));
+  strcpy(e->album, album);
+  e->genre = malloc(sizeof(char) * (strlen(genre) + 1));
+  strcpy(e->genre, genre);
+  e->discNumber = discNumber;
+  e->trackNumber = trackNumber;
+  e->year = year;
+  return e;
 }
 
-List search_r(Element e, List l)
+List readMusics(char *sourceFilename)
 {
-  if (isEmpty(l))
-    return NULL;
-  else if (equalsElement(l->element, e))
-    return l;
-  else
-    return search_r(e, l->next);
-}
+  List l = NULL;
+  FILE *sourceFile = fopen(sourceFilename, "r");
 
-List removeFirst_i(Element e, List l)
-{
-  List search = search_i(e, l);
-  if (equalsElement(l, search))
+  char buffer[BUFFER_SIZE];
+  size_t len;
+
+  if (sourceFile == NULL)
   {
-    l = l->next;
-    search->next = NULL;
-    destroyList_i(search);
+    fprintf(stderr, "Impossible d'ouvrir le fichier %s", sourceFilename);
+    exit(EXIT_FAILURE);
   }
-  else if (!isEmpty(search))
+
+  int numberOfMusics = 0;
+  while (fgets(buffer, BUFFER_SIZE, sourceFile) != NULL)
   {
-    List tmp = l;
-    while (!equalsElement(tmp->next, search))
-    {
-      tmp = tmp->next;
-    }
-    tmp->next = search->next;
-    search->next = NULL;
-    destroyList_i(search);
+    numberOfMusics++;
   }
+
+  rewind(sourceFile);
+
+  for (int i = 0; i < numberOfMusics; i++)
+  {
+    fgets(buffer, BUFFER_SIZE, sourceFile);
+    buffer[(len = strcspn(buffer, "\n"))] = 0;
+
+    if (i == 0)
+      continue;
+
+    char *buffer_p = buffer;
+
+    char *name = strsep(&buffer_p, ",");
+    char *artist = strsep(&buffer_p, ",");
+    char *album = strsep(&buffer_p, ",");
+    char *genre = strsep(&buffer_p, ",");
+    int discNumber = atoi(strsep(&buffer_p, ","));
+    int trackNumber = atoi(strsep(&buffer_p, ","));
+    int year = atoi(strsep(&buffer_p, ","));
+
+    Music *e = createNewMusic(name, artist, album, genre, discNumber, trackNumber, year);
+    l = addTail_i(e, l);
+  }
+
+  fclose(sourceFile);
   return l;
 }
 
-List removeFirst_r(Element e, List l)
+void swap(Music **a, Music **b)
 {
-  if (isEmpty(l))
-    return NULL;
-  else if (equalsElement(l->element, e))
-  {
-    List tmp = l->next;
-    l->next = NULL;
-    destroyList_r(l);
-    return tmp;
-  }
-  else
-  {
-    l->next = removeFirst_r(e, l->next);
-    return l;
-  }
+  Music *temp = *a;
+  *a = *b;
+  *b = temp;
 }
 
-void showListReverse_r(List l)
+List bubbleSortByYear(List l)
 {
-  if (!isEmpty(l))
+  int swapped;
+  List listA;
+  List listB = NULL;
+
+  if (l == NULL)
+    return NULL;
+
+  do
   {
-    showListReverse_r(l->next);
-    showElement(l->element);
-  }
+    swapped = 0;
+    listA = l;
+
+    while (listA->next != listB)
+    {
+      if (((Music *)listA->element)->year > ((Music *)listA->next->element)->year)
+      {
+        swap(&listA->element, &listA->next->element);
+        swapped = 1;
+      }
+      listA = listA->next;
+    }
+    listB = listA;
+  } while (swapped);
+
+  return l;
 }
