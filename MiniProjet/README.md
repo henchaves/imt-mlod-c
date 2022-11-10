@@ -44,6 +44,7 @@ En plus des 6 formes de pièces standard, 7 nouvelles formes ont été ajoutées
 Lorsque le jeu se termine (lorsqu'une pièce touche le plafond), le score de chaque joueur est affiché à l'écran.
 
 # URL vidéo de démo
+English version: https://youtu.be/TDDFQGIw3kY
 # Quelques détails sur votre implémentation
 Le code source du jeu est contenu dans un seul fichier appelé `tetris.c`.
 
