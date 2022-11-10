@@ -59,4 +59,4 @@ La fonction principale du jeu, `DrawGame`, a également été modifiée, princip
 # Extensions / améliorations possibles
 > 1) Créer un mode de jeu N joueurs (porquoi pas?);
 > 2) Tirer au sort une vitesse de pièce différente pour chaque tour;
-> 3) Montrer la pièce suivante ainsi que la couleur du joueur suivant sur la petite grille.
+> 3) Montrer la pièce suivante ainsi que la couleur du joueur suivant sur la petite grille ("incoming").
