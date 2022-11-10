@@ -64,17 +64,55 @@ List readMusics(char *sourceFilename)
     int year = atoi(strsep(&buffer_p, ","));
 
     Element e = createNewMusic(name, artist, album, genre, discNumber, trackNumber, year);
-
-    l = addHead(e, l);
+    l = addTail_i(e, l);
   }
 
   fclose(sourceFile);
   return l;
 }
 
+void swap(Element *a, Element *b)
+{
+  Element temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+List bubbleSort(List l)
+{
+  int swapped;
+  List listA;
+  List listB = NULL;
+
+  if (l == NULL)
+    return NULL;
+
+  do
+  {
+    swapped = 0;
+    listA = l;
+
+    while (listA->next != listB)
+    {
+      if (listA->element->year > listA->next->element->year)
+      {
+        swap(&listA->element, &listA->next->element);
+        swapped = 1;
+      }
+      listA = listA->next;
+    }
+    listB = listA;
+  } while (swapped);
+
+  return l;
+}
+
 int main()
 {
-  List l = readMusics("music.csv");
-  showList_r(l);
+  List musicsList = readMusics("music.csv");
+  // showList_r(musicsList);
+
+  List sortedMusicsList = bubbleSort(musicsList);
+  showList_i(sortedMusicsList);
   return 0;
 }
