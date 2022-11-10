@@ -1,3 +1,11 @@
+# Tetris - 2 joueurs
+## Mini projet de programmation en C et raylib
+
+![Image: Tetris](screenshots/canvas_running.png)
+![Image: Game Over](screenshots/canvas_game_over.png)
+
+
+
 # Description du projet
 - quel jeu a été modifié / étendu ou réalisé ?
 > [Tetris](https://www.raylib.com/games.html) (modifié)
@@ -19,6 +27,19 @@ Cette adaptation du jeu Tetris, se joue à deux joueurs. Pour chaque pièce qui 
 Si la pièce est bleue, le joueur 1 (P1) peut utiliser les touches WASD pour déplacer la pièce. Si la pièce est rouge, le joueur 2 (P2) doit utiliser les touches fléchées pour déplacer la pièce.
 
 En plus des 6 formes de pièces standard, 7 nouvelles formes ont été ajoutées, comme on peut le voir dans les images ci-dessous :
+
+![Image: Piece - Big Diagonal](screenshots/piece_big_diagonal.png)
+![Image: Piece - Small Diagonal](screenshots/piece_small_diagonal.png)
+![Image: Piece - C](screenshots/piece_c.png)
+![Image: Piece - T](screenshots/piece_t.png)
+![Image: Piece - U](screenshots/piece_u.png)
+![Image: Piece - X](screenshots/piece_x.png)
+![Image: Piece - X-cube](screenshots/piece_x_cube.png)
+
+
+
+
+
 
 Lorsque le jeu se termine (lorsqu'une pièce touche le plafond), le score de chaque joueur est affiché à l'écran.
 
